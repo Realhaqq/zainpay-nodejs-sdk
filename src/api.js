@@ -4,12 +4,10 @@ async function Zainpay(param) {
     const axios = require('axios');
     const {
         getUrl,
-        // BaseError,
         handleErrors,
         handleAxiosError,
     } = require('./utils');
-    const {BaseError} = require('./utils/errors/error.base')
-    const { publicKey, serviceType, sandbox, data } = param;
+    let { publicKey, serviceType, sandbox, data } = param;
     
       /**
    * makes an encrypted call to Spendo API
@@ -18,15 +16,11 @@ async function Zainpay(param) {
    * @return {object} data return decrypted data response object
    */
     if (!publicKey) {
-        throw {
-            message: 'publicKey is required',
-        };
+        return console.log('publicKey is required');
     }
 
     if (!serviceType) {
-        throw {
-            message: 'serviceType is required',
-        };
+        return console.log('serviceType is required');
     }
 
     if (!sandbox) {
@@ -42,23 +36,22 @@ async function Zainpay(param) {
         },
     });
 
-    const { url, method } = serviceTypes[serviceType];
+    const { url, method } = serviceTypes[serviceType.name];
     try {
         const response = axiosStruct[method](url, data ? data : {})
         .then(function (response) {
             if (response.status === 200) {
-                return JSON.stringify(response.data)
+                return response.data
             }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log(error || 'Error: no data returned!');
         });
           
         return await response??console.log('Error: no data returned!')
 
     } catch (error) {
-        // return handleAxiosError(error)
-        throw new BaseError({ message: handleAxiosError(error) });
+        return console.log(error || 'Error: no data returned!')
     }
 }
 

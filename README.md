@@ -104,14 +104,12 @@ The following services are available with this SDK
 ### 1. Get ZainBoxes
 Get all your created zainboxes
     
-    ```js
+   ```js
     const reponse = await Zainpay({
         publicKey: PUBLIC_KEY,
-        serviceType: serviceTypes.GET_ZAINBOXES,
-        data: {
-            }
+        serviceType: serviceTypes.ZAINBOXES,
     });
     console.log(reponse);
     ```
 
-<!-- add the Card Endpoints -->
+

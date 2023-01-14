@@ -1,5 +1,10 @@
 const serviceTypes = require("./constants/services");
 
+/**
+ * @description initialize the Zainpay wrapper function
+ * @param {object} param =>  publicKey, data, serviceType, sandbox
+ * @return {function} request function
+ */
 async function Zainpay(param) {
     const axios = require('axios');
     const {
@@ -37,22 +42,25 @@ async function Zainpay(param) {
     });
 
     const { url, method } = serviceTypes[serviceType.name];
-    try {
-        const response = axiosStruct[method](url, data ? data : {})
+
+    // to add path param to the call
+    if (data.param) {
+        url = url + data.param;
+    }
+
+    const response = axiosStruct[method](url, data)
         .then(function (response) {
             if (response.status === 200) {
+                console.log('response', response.data);
                 return response.data
             }
         })
         .catch(function (error) {
-            console.log(error || 'Error: no data returned!');
-        });
+            console.log('error', error);
+            return error.response.data
+    });
           
-        return await response??console.log('Error: no data returned!')
-
-    } catch (error) {
-        return console.log(error || 'Error: no data returned!')
-    }
+    return await response;
 }
 
 module.exports = {
